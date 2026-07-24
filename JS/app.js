@@ -2,34 +2,30 @@
    APP
 =========================== */
 
-document
-    .getElementById("search")
-    .addEventListener("input", e =>
-        setSearch(e.target.value)
+DOM.search.addEventListener("input", e => {
+
+    setSearch(e.target.value);
+
+});
+
+DOM.heroSearch.addEventListener("input", e => {
+
+    setSearch(e.target.value);
+
+});
+
+DOM.heroSearchForm.addEventListener("submit", e => {
+
+    e.preventDefault();
+
+    setSearch(
+        DOM.heroSearch.value
     );
 
-document
-    .getElementById("heroSearch")
-    .addEventListener("input", e =>
-        setSearch(e.target.value)
-    );
-
-document
-    .getElementById("heroSearchForm")
-    .addEventListener("submit", e => {
-
-        e.preventDefault();
-
-        setSearch(
-            document.getElementById("heroSearch").value
-        );
-
-        document
-            .getElementById("directorio")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
-
+    DOM.directorio.scrollIntoView({
+        behavior: "smooth"
     });
+
+});
 
 cargarComercios();

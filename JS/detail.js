@@ -2,20 +2,24 @@
    DETALLE DEL COMERCIO
 =========================== */
 
-document.getElementById("grid").addEventListener("click", (e) => {
+DOM.grid.addEventListener("click", (e) => {
+
     const btn = e.target.closest(".btn-detail");
+
     if (!btn) return;
 
-    const item = ALL_ITEMS.find(
+    const item = APP.items.find(
         it => slugify(it.nombreComercio) === btn.dataset.slug
     );
 
     if (item) {
         openDetail(item);
     }
+
 });
 
 function openDetail(item) {
+
     const slug = slugify(item.nombreComercio);
 
     history.pushState(
@@ -25,6 +29,16 @@ function openDetail(item) {
     );
 
     showDetail(item);
+
+}
+
+function hideDetail() {
+
+    DOM.detail.hidden = true;
+    DOM.detail.innerHTML = "";
+
+    document.body.style.overflow = "";
+
 }
 
 function closeDetail() {
@@ -35,12 +49,7 @@ function closeDetail() {
         window.location.pathname
     );
 
-    const el = document.getElementById("detailView");
-
-    el.hidden = true;
-    el.innerHTML = "";
-
-    document.body.style.overflow = "";
+    hideDetail();
 
 }
 
@@ -62,14 +71,11 @@ function showDetail(item) {
             .slice(0, 2)
             .toUpperCase();
 
-    const idBlock = item.logo
+    const logo = item.logo
         ? `<img class="logo-img detail-logo" src="${item.logo}" alt="">`
         : `<div class="monogram detail-logo">${escapeHtml(initials)}</div>`;
 
-    const el =
-        document.getElementById("detailView");
-
-    el.innerHTML = `
+    DOM.detail.innerHTML = `
 
 <div class="detail-inner">
 
@@ -81,7 +87,7 @@ type="button">
 
 <div class="detail-head">
 
-${idBlock}
+${logo}
 
 <div>
 
@@ -125,15 +131,13 @@ ${item.ciudad ? `
 <div>
 <b>Ciudad</b>
 <span>${escapeHtml(item.ciudad)}</span>
-</div>
-` : ""}
+</div>` : ""}
 
 ${item.filial ? `
 <div>
 <b>Peña / Filial</b>
 <span>${escapeHtml(item.filial)}</span>
-</div>
-` : ""}
+</div>` : ""}
 
 </div>
 
@@ -146,8 +150,7 @@ href="${wa}"
 target="_blank"
 rel="noopener">
 WhatsApp
-</a>
-` : ""}
+</a>` : ""}
 
 <a
 class="btn-ghost detail-ghost"
@@ -164,8 +167,7 @@ href="${ig}"
 target="_blank"
 rel="noopener">
 Instagram
-</a>
-` : ""}
+</a>` : ""}
 
 ${fb ? `
 <a
@@ -174,39 +176,39 @@ href="${fb}"
 target="_blank"
 rel="noopener">
 Facebook
-</a>
-` : ""}
+</a>` : ""}
 
 </div>
 
 </div>
 `;
 
-    el.hidden = false;
+    DOM.detail.hidden = false;
 
     document.body.style.overflow = "hidden";
 
-    el.querySelector(".detail-close")
+    DOM.detail
+        .querySelector(".detail-close")
         .addEventListener("click", closeDetail);
 
     window.scrollTo({
-        top: 0
+        top: 0,
+        behavior: "smooth"
     });
 
 }
 
 function openDetailFromUrl() {
 
-    const slug =
-        new URLSearchParams(window.location.search)
-            .get("comercio");
+    const slug = new URLSearchParams(
+        window.location.search
+    ).get("comercio");
 
     if (!slug) return;
 
-    const item =
-        ALL_ITEMS.find(
-            it => slugify(it.nombreComercio) === slug
-        );
+    const item = APP.items.find(
+        it => slugify(it.nombreComercio) === slug
+    );
 
     if (item) {
         showDetail(item);
@@ -216,16 +218,20 @@ function openDetailFromUrl() {
 
 window.addEventListener("popstate", () => {
 
-    const slug =
-        new URLSearchParams(window.location.search)
-            .get("comercio");
+    const slug = new URLSearchParams(
+        window.location.search
+    ).get("comercio");
 
-    const item =
-        slug
-            ? ALL_ITEMS.find(
-                it => slugify(it.nombreComercio) === slug
-            )
-            : null;
+    if (!slug) {
+
+        hideDetail();
+        return;
+
+    }
+
+    const item = APP.items.find(
+        it => slugify(it.nombreComercio) === slug
+    );
 
     if (item) {
 
@@ -233,8 +239,7 @@ window.addEventListener("popstate", () => {
 
     } else {
 
-        document.getElementById("detailView").hidden = true;
-        document.body.style.overflow = "";
+        hideDetail();
 
     }
 

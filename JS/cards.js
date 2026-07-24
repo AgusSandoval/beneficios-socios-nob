@@ -1,11 +1,12 @@
 function render() {
-    const grid = document.getElementById("grid");
-    const countLine = document.getElementById("countLine");
-    const term = searchTerm.toLowerCase();
 
-    const filtered = ALL_ITEMS.filter(it => {
+    const term = APP.filtros.busqueda.toLowerCase();
+
+    const filtered = APP.items.filter(it => {
+
         const matchesRubro =
-            activeRubro === "Todos" || it.rubro === activeRubro;
+            APP.filtros.rubro === "Todos" ||
+            it.rubro === APP.filtros.rubro;
 
         const haystack = `
             ${it.nombreComercio || ""}
@@ -16,23 +17,22 @@ function render() {
             ${it.ciudad || ""}
         `.toLowerCase();
 
-        const matchesSearch =
-            !term || haystack.includes(term);
+        return matchesRubro &&
+            (!term || haystack.includes(term));
 
-        return matchesRubro && matchesSearch;
     });
 
-    countLine.textContent =
+    DOM.countLine.textContent =
         `${filtered.length} comercio${filtered.length === 1 ? "" : "s"} de socios encontrados`;
 
     if (filtered.length === 0) {
 
-        if (ALL_ITEMS.length === 0) {
+        if (APP.items.length === 0) {
 
-            countLine.textContent =
+            DOM.countLine.textContent =
                 "Todavía no hay comercios adheridos";
 
-            grid.innerHTML = `
+            DOM.grid.innerHTML = `
 <div class="empty" style="grid-column:1/-1;text-align:center;padding:50px 20px;">
     <h2>¡Próximamente!</h2>
 
@@ -48,23 +48,22 @@ function render() {
     <a class="btn" href="${CONFIG.formUrl}">
         Adherir mi comercio
     </a>
-
-</div>
-`;
+</div>`;
 
             return;
+
         }
 
-        grid.innerHTML = `
+        DOM.grid.innerHTML = `
 <div class="empty" style="grid-column:1/-1;">
 No hay comercios que coincidan con la búsqueda.
-</div>
-`;
+</div>`;
 
         return;
+
     }
 
-    grid.innerHTML = filtered.map(it => {
+    DOM.grid.innerHTML = filtered.map(it => {
 
         const wa = waLink(it.whatsapp);
         const ig = instagramLink(it.instagram);
@@ -78,7 +77,7 @@ No hay comercios que coincidan con la búsqueda.
                 .slice(0, 2)
                 .toUpperCase();
 
-        const idBlock = it.logo
+        const logo = it.logo
             ? `<img class="logo-img" src="${it.logo}" alt="" loading="lazy">`
             : `<div class="monogram">${escapeHtml(initials)}</div>`;
 
@@ -95,7 +94,7 @@ ${escapeHtml(it.beneficio)}
 
 <div class="id-row">
 
-${idBlock}
+${logo}
 
 <div>
 
@@ -125,12 +124,10 @@ ${escapeHtml(it.descripcion)}
 <div class="meta">
 
 ${it.ciudad ? `
-<span class="zona">${escapeHtml(it.ciudad)}</span>
-` : ""}
+<span class="zona">${escapeHtml(it.ciudad)}</span>` : ""}
 
 ${it.filial ? `
-<span class="filial">${escapeHtml(it.filial)}</span>
-` : ""}
+<span class="filial">${escapeHtml(it.filial)}</span>` : ""}
 
 </div>
 
@@ -165,11 +162,10 @@ Facebook
 
 </div>
 
-</div>
-
-`;
+</div>`;
 
     }).join("");
+
 }
 
 function buildChips() {
@@ -177,32 +173,30 @@ function buildChips() {
     const rubros = [
         "Todos",
         ...new Set(
-            ALL_ITEMS
+            APP.items
                 .map(i => i.rubro)
                 .filter(Boolean)
         )
     ];
 
-    const chips =
-        document.getElementById("chips");
-
-    chips.innerHTML =
-        rubros.map(r => `
+    DOM.chips.innerHTML = rubros.map(r => `
 <button
-class="chip ${r === activeRubro ? "active" : ""}"
+class="chip ${r === APP.filtros.rubro ? "active" : ""}"
 data-rubro="${escapeHtml(r)}">
 ${escapeHtml(r)}
 </button>
 `).join("");
 
-    chips.querySelectorAll(".chip")
+    DOM.chips
+        .querySelectorAll(".chip")
         .forEach(btn => {
 
             btn.addEventListener("click", () => {
 
-                activeRubro = btn.dataset.rubro;
+                APP.filtros.rubro = btn.dataset.rubro;
 
-                chips.querySelectorAll(".chip")
+                DOM.chips
+                    .querySelectorAll(".chip")
                     .forEach(c => c.classList.remove("active"));
 
                 btn.classList.add("active");
@@ -217,53 +211,40 @@ ${escapeHtml(r)}
 
 function updateStats() {
 
-    const comercios =
-        ALL_ITEMS.length;
+    const comercios = APP.items.length;
 
-    const rubros =
-        new Set(
-            ALL_ITEMS.map(i => i.rubro).filter(Boolean)
-        ).size;
+    const rubros = new Set(
+        APP.items
+            .map(i => i.rubro)
+            .filter(Boolean)
+    ).size;
 
-    const localidades =
-        new Set(
-            ALL_ITEMS.map(i => i.ciudad).filter(Boolean)
-        ).size;
+    const localidades = new Set(
+        APP.items
+            .map(i => i.ciudad)
+            .filter(Boolean)
+    ).size;
 
-    const set = (id, value) => {
+    DOM.statComercios.textContent =
+        comercios || "—";
 
-        const el = document.getElementById(id);
+    DOM.statRubros.textContent =
+        rubros || "—";
 
-        if (el) {
-
-            el.textContent =
-                value === 0 ? "—" : value;
-
-        }
-
-    }
-
-    set("statComercios", comercios);
-    set("statRubros", rubros);
-    set("statLocalidades", localidades);
+    DOM.statLocalidades.textContent =
+        localidades || "—";
 
 }
 
 function setSearch(value) {
 
-    searchTerm = value;
+    APP.filtros.busqueda = value;
 
-    const hero =
-        document.getElementById("heroSearch");
+    if (DOM.heroSearch.value !== value)
+        DOM.heroSearch.value = value;
 
-    const dir =
-        document.getElementById("search");
-
-    if (hero && hero.value !== value)
-        hero.value = value;
-
-    if (dir && dir.value !== value)
-        dir.value = value;
+    if (DOM.search.value !== value)
+        DOM.search.value = value;
 
     render();
 
@@ -271,7 +252,7 @@ function setSearch(value) {
 
 function init(items) {
 
-    ALL_ITEMS = items;
+    APP.items = items;
 
     buildChips();
 

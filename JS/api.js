@@ -4,40 +4,42 @@
 
 async function fetchAirtableAll() {
 
-    const res = await fetch(
+    const response = await fetch(
         "/.netlify/functions/get-negocios"
     );
 
-    if (!res.ok) {
+    if (!response.ok) {
+
         throw new Error(
             "No se pudieron obtener los comercios"
         );
+
     }
 
-    return await res.json();
+    return response.json();
 
 }
 
-function cargarComercios() {
+async function cargarComercios() {
 
-    fetchAirtableAll()
+    try {
 
-        .then(records => {
+        const records = await fetchAirtableAll();
 
-            const items = records
-                .map(r => normalizeRow(r.fields))
-                .filter(it => it.nombreComercio);
+        APP.items = records
+            .map(record => normalizeRow(record.fields))
+            .filter(item => item.nombreComercio);
 
-            init(items);
+        init();
 
-        })
+    } catch (error) {
 
-        .catch(err => {
+        console.error(error);
 
-            console.error(err);
+        APP.items = [];
 
-            init([]);
+        init();
 
-        });
+    }
 
 }

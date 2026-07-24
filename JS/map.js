@@ -2,20 +2,19 @@
    MAPA
 =========================== */
 
+let mapInstance = null;
+
 function initMap() {
 
-    const mapEl = document.getElementById("map");
-    const emptyEl = document.getElementById("mapEmpty");
-
-    if (!mapEl || typeof L === "undefined") {
+    if (!DOM.map || typeof L === "undefined") {
         return;
     }
 
-    const points = ALL_ITEMS
+    const points = APP.items
         .map(item => ({
             item,
-            lat: parseFloat(item.lat),
-            lng: parseFloat(item.lng)
+            lat: Number(item.lat),
+            lng: Number(item.lng)
         }))
         .filter(point =>
             Number.isFinite(point.lat) &&
@@ -23,13 +22,28 @@ function initMap() {
         );
 
     if (points.length === 0) {
-        emptyEl.hidden = false;
+
+        DOM.mapEmpty.hidden = false;
+
+        if (mapInstance) {
+            mapInstance.remove();
+            mapInstance = null;
+        }
+
         return;
+
     }
 
-    emptyEl.hidden = true;
+    DOM.mapEmpty.hidden = true;
 
-    const map = L.map("map").setView(
+    if (mapInstance) {
+        mapInstance.remove();
+        mapInstance = null;
+    }
+
+    DOM.map.innerHTML = "";
+
+    mapInstance = L.map(DOM.map).setView(
         [-34.6037, -58.3816],
         11
     );
@@ -40,7 +54,7 @@ function initMap() {
             maxZoom: 18,
             attribution: "&copy; colaboradores de OpenStreetMap"
         }
-    ).addTo(map);
+    ).addTo(mapInstance);
 
     const bounds = [];
 
@@ -49,7 +63,7 @@ function initMap() {
         bounds.push([lat, lng]);
 
         L.marker([lat, lng])
-            .addTo(map)
+            .addTo(mapInstance)
             .bindPopup(`
                 <strong>${escapeHtml(item.nombreComercio)}</strong><br>
                 ${escapeHtml(item.beneficio || "")}
@@ -57,10 +71,16 @@ function initMap() {
 
     });
 
-    if (bounds.length > 1) {
-        map.fitBounds(bounds, {
+    if (bounds.length === 1) {
+
+        mapInstance.setView(bounds[0], 15);
+
+    } else {
+
+        mapInstance.fitBounds(bounds, {
             padding: [30, 30]
         });
+
     }
 
 }
