@@ -35,7 +35,7 @@ exports.handler = async (event) => {
 
   const AIRTABLE_TOKEN = process.env.AIRTABLE_WRITE_TOKEN;
   const BASE_ID = process.env.AIRTABLE_BASE_ID || "app4jSY7c4UJ14ILU";
-  const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "Negocios";
+  const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "Comercios";
 
   if (!AIRTABLE_TOKEN) {
     return {
@@ -61,21 +61,33 @@ exports.handler = async (event) => {
 
   // Sanitizado básico: recorta espacios y evita objetos/arrays inesperados.
   const clean = (v) => (typeof v === "string" ? v.trim().slice(0, 500) : "");
-  const persona = clean(data.persona);
-  const negocio = clean(data.negocio);
-  const rubro = clean(data.rubro);
+  const personaContacto = clean(data.personaContacto);
+  const nombreComercio = clean(data.nombreComercio);
   const filial = clean(data.filial);
-  const descripcion = clean(data.descripcion).slice(0, 400);
-  const descuento = clean(data.descuento);
-  const zona = clean(data.zona);
-  const contacto = clean(data.contacto);
+  const rubro = clean(data.rubro);
+  const descripcion = clean(data.descripcion);
+
+  const beneficio = clean(data.beneficio);
+  const ciudad = clean(data.ciudad);
+  const direccion = clean(data.direccion);
+
+  const whatsapp = clean(data.whatsapp);
   const instagram = clean(data.instagram);
   const facebook = clean(data.facebook);
 
+  const sitioWeb = clean(data.sitioWeb);
+  const email = clean(data.email);
+
   const errores = [];
-  if (!persona) errores.push("Nombre y apellido");
-  if (!negocio) errores.push("Nombre del comercio");
+  const errores = [];
+
+  if (!personaContacto) errores.push("Persona de contacto");
+  if (!nombreComercio) errores.push("Nombre del comercio");
   if (!rubro) errores.push("Rubro");
+  if (!beneficio) errores.push("Beneficio");
+  if (!ciudad) errores.push("Ciudad");
+  if (!whatsapp) errores.push("WhatsApp");
+  if (!email) errores.push("Email");
 
   if (errores.length) {
     return {
@@ -92,17 +104,22 @@ exports.handler = async (event) => {
   // Si en tu tabla las columnas se llaman distinto, ajustá las claves
   // del lado izquierdo (los nombres deben coincidir con COLS en index.html).
   const fields = {
-    "Nombre y Apellido": persona,
-    "Nombre del negocio o servicio": negocio,
+    "Nombre del comercio": nombreComercio,
+    "Persona de contacto": personaContacto,
     "Peña / Filial": filial,
     "Rubro": rubro,
-    "Descripción breve": descripcion,
-    "Descuento para socios": descuento,
-    "Zona / Barrio": zona,
-    "WhatsApp o teléfono": contacto,
+    "Descripción": descripcion,
+    "Beneficio": beneficio,
+    "Ciudad": ciudad,
+    "Dirección": direccion,
+    "WhatsApp": whatsapp,
     "Instagram": instagram,
     "Facebook": facebook,
-    "Estado": "Pendiente", // siempre Pendiente, nunca lo decide el cliente
+    "Sitio web": sitioWeb,
+    "Email": email,
+
+    "Estado": "Pendiente",
+    "Destacado": false
   };
 
   try {

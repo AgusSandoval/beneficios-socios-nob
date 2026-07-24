@@ -24,7 +24,7 @@ exports.handler = async (event) => {
 
     const AIRTABLE_TOKEN = process.env.AIRTABLE_WRITE_TOKEN;
     const BASE_ID = process.env.AIRTABLE_BASE_ID || "app4jSY7c4UJ14ILU";
-    const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "Negocios";
+    const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "Comercios";
 
     if (!AIRTABLE_TOKEN) {
         return {
