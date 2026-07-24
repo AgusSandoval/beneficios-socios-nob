@@ -58,13 +58,13 @@ function showDetail(item) {
     const wa = waLink(item.whatsapp);
     const ig = instagramLink(item.instagram);
     const fb = facebookLink(item.facebook);
+    const web = item.web
+        ? (item.web.startsWith("http") ? item.web : `https://${item.web}`)
+        : null;
 
-    const mapsQuery =
-        item.direccion ||
-        `${item.nombreComercio} ${item.ciudad || ""}`;
-
-    const mapsUrl =
-        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
+    const mapsUrl = item.direccion
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.direccion)}`
+        : null;
 
     const initials =
         (item.nombreComercio || "?")
@@ -74,6 +74,18 @@ function showDetail(item) {
     const logo = item.logo
         ? `<img class="logo-img detail-logo" src="${item.logo}" alt="">`
         : `<div class="monogram detail-logo">${escapeHtml(initials)}</div>`;
+
+    const hasMeta =
+        item.direccion ||
+        item.ciudad ||
+        item.filial;
+
+    const hasActions =
+        wa ||
+        mapsUrl ||
+        web ||
+        ig ||
+        fb;
 
     DOM.detail.innerHTML = `
 
@@ -99,9 +111,11 @@ ${escapeHtml(item.rubro || "General")}
 ${escapeHtml(item.nombreComercio)}
 </h2>
 
+${item.personaContacto ? `
 <div class="persona">
-${escapeHtml(item.personaContacto || "")}
+${escapeHtml(item.personaContacto)}
 </div>
+` : ""}
 
 </div>
 
@@ -125,22 +139,34 @@ ${escapeHtml(item.descripcion)}
 </p>
 ` : ""}
 
+${hasMeta ? `
 <div class="detail-meta">
+
+${item.direccion ? `
+<div>
+<b>Dirección</b>
+<span>${escapeHtml(item.direccion)}</span>
+</div>
+` : ""}
 
 ${item.ciudad ? `
 <div>
 <b>Ciudad</b>
 <span>${escapeHtml(item.ciudad)}</span>
-</div>` : ""}
+</div>
+` : ""}
 
 ${item.filial ? `
 <div>
 <b>Peña / Filial</b>
 <span>${escapeHtml(item.filial)}</span>
-</div>` : ""}
+</div>
+` : ""}
 
 </div>
+` : ""}
 
+${hasActions ? `
 <div class="detail-actions">
 
 ${wa ? `
@@ -150,8 +176,10 @@ href="${wa}"
 target="_blank"
 rel="noopener">
 WhatsApp
-</a>` : ""}
+</a>
+` : ""}
 
+${mapsUrl ? `
 <a
 class="btn-ghost detail-ghost"
 href="${mapsUrl}"
@@ -159,6 +187,17 @@ target="_blank"
 rel="noopener">
 Cómo llegar
 </a>
+` : ""}
+
+${web ? `
+<a
+class="btn-ghost detail-ghost"
+href="${web}"
+target="_blank"
+rel="noopener">
+Sitio web
+</a>
+` : ""}
 
 ${ig ? `
 <a
@@ -167,7 +206,8 @@ href="${ig}"
 target="_blank"
 rel="noopener">
 Instagram
-</a>` : ""}
+</a>
+` : ""}
 
 ${fb ? `
 <a
@@ -176,9 +216,11 @@ href="${fb}"
 target="_blank"
 rel="noopener">
 Facebook
-</a>` : ""}
+</a>
+` : ""}
 
 </div>
+` : ""}
 
 </div>
 `;
