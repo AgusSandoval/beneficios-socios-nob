@@ -8,7 +8,11 @@ exports.handler = async (event) => {
     };
 
     if (event.httpMethod === "OPTIONS") {
-        return { statusCode: 204, headers: cors, body: "" };
+        return {
+            statusCode: 204,
+            headers: cors,
+            body: "",
+        };
     }
 
     if (event.httpMethod !== "GET") {
@@ -67,14 +71,6 @@ exports.handler = async (event) => {
             console.log("AIRTABLE RESPONSE:");
             console.log(JSON.stringify(data, null, 2));
 
-            const res = await fetch(url, {
-                headers: {
-                    Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-                },
-            });
-
-            const data = await res.json();
-
             if (!res.ok) {
                 const msg = data?.error?.message || "Error consultando Airtable";
                 throw new Error(msg);
@@ -92,6 +88,8 @@ exports.handler = async (event) => {
         };
 
     } catch (err) {
+        console.error(err);
+
         return {
             statusCode: 500,
             headers: cors,
