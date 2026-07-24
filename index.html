@@ -1587,15 +1587,18 @@
           <label for="fPersonaContacto">Nombre y apellido *</label>
           <input id="fPersonaContacto" name="personaContacto" required autocomplete="name">
         </div>
+
         <div class="form-row">
           <label for="fNombreComercio">Nombre del comercio o servicio *</label>
           <input id="fNombreComercio" name="nombreComercio" required>
         </div>
+
         <div class="form-row two-col">
           <div>
             <label for="fFilial">Peña / Filial</label>
-            <input id="fFilial" name="filial" placeholder="Ej: tu peña o filial">
+            <input id="fFilial" name="filial" placeholder="Ej: Peña Leprosa CABA">
           </div>
+
           <div>
             <label for="fRubro">Rubro *</label>
             <select id="fRubro" name="rubro" required>
@@ -1612,39 +1615,71 @@
             </select>
           </div>
         </div>
+
         <div class="form-row">
           <label for="fDescripcion">Descripción breve</label>
-          <textarea id="fDescripcion" name="descripcion" rows="3" maxlength="220"></textarea>
+          <textarea id="fDescripcion" name="descripcion" rows="3" maxlength="220"
+            placeholder="Contanos brevemente sobre tu comercio o servicio."></textarea>
         </div>
+
         <div class="form-row two-col">
           <div>
-            <label for="fBeneficio">Descuento para socios</label>
-            <input id="fBeneficio" name="beneficio" placeholder="Ej: 15% OFF">
+            <label for="fBeneficio">Beneficio para socios *</label>
+            <input id="fBeneficio" name="beneficio" placeholder="Ej: 15% OFF" required>
           </div>
+
           <div>
-            <label for="fCiudad">Zona / Barrio</label>
-            <input id="fCiudad" name="ciudad" placeholder="Ej: CABA - Caballito">
+            <label for="fCiudad">Ciudad *</label>
+            <input id="fCiudad" name="ciudad" placeholder="Ej: CABA" required>
           </div>
         </div>
+
+        <div class="form-row">
+          <label for="fDireccion">Dirección</label>
+          <input id="fDireccion" name="direccion" placeholder="Ej: Av. Rivadavia 1234">
+        </div>
+
         <div class="form-row two-col">
           <div>
             <label for="fWhatsapp">WhatsApp</label>
-            <input id="fWhatsapp" name="whatsapp" placeholder="Ej: 5491122223333">
+            <input id="fWhatsapp" name="whatsapp" placeholder="5491122223333">
           </div>
+
           <div>
             <label for="fInstagram">Instagram</label>
-            <input id="fInstagram" name="instagram" placeholder="usuario, sin @">
+            <input id="fInstagram" name="instagram" placeholder="usuario (sin @)">
           </div>
         </div>
+
         <div class="form-row">
-          <label for="fFacebook">Facebook (opcional)</label>
-          <input id="fFacebook" name="facebook">
+          <label for="fFacebook">Facebook</label>
+          <input id="fFacebook" name="facebook" placeholder="facebook.com/tucomercio">
         </div>
 
-        <button type="submit" class="btn-primary" id="formSubmitBtn">Enviar mi beneficio</button>
+        <div class="form-row two-col">
+          <div>
+            <label for="fSitioWeb">Sitio web</label>
+            <input id="fSitioWeb" name="sitioWeb" type="url" placeholder="https://...">
+          </div>
+
+          <div>
+            <label for="fEmail">Email</label>
+            <input id="fEmail" name="email" type="email" placeholder="contacto@empresa.com">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="formSubmitBtn">
+          Enviar mi beneficio
+        </button>
+
         <div id="formMsg" class="form-msg" hidden></div>
-        <p class="form-alt">¿Preferís el formulario clásico? <a id="formAltLink" href="#" target="_blank"
-            rel="noopener">Completalo acá</a>.</p>
+
+        <p class="form-alt">
+          ¿Preferís el formulario clásico?
+          <a id="formAltLink" href="#" target="_blank" rel="noopener">
+            Completalo acá
+          </a>.
+        </p>
       </form>
     </div>
   </section>
