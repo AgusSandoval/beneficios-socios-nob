@@ -1748,15 +1748,6 @@
       "Longitud": "lng",
     };
 
-    const DEMO_DATA = [
-      {persona: "Ricardo D.", negocio: "Ferretería El Coloso", filial: "", rubro: "🏠 Hogar y Construcción", descripcion: "Materiales de construcción y ferretería general.", descuento: "10% OFF", zona: "Rosario", contacto: "541122223333", instagram: "", facebook: "ferreteriaelcoloso", lat: "", lng: ""},
-      {persona: "Marina S.", negocio: "Estudio Marina S. — Contadora", filial: "", rubro: "👨‍💼 Servicios Profesionales", descripcion: "Monotributo, ganancias y asesoramiento para pymes.", descuento: "1ra consulta sin cargo", zona: "CABA - Caballito", contacto: "541133334444", instagram: "marinacontadora", facebook: "", lat: "-34.6187", lng: "-58.4394"},
-      {persona: "Gonzalo P.", negocio: "Pizzería La Lepra", filial: "", rubro: "🍽️ Gastronomía", descripcion: "Pizza al molde estilo rosarino, delivery y salón.", descuento: "15% OFF con carnet de socio", zona: "CABA - Flores", contacto: "541144445555", instagram: "lalepracaba", facebook: "lalepracaba", lat: "-34.6280", lng: "-58.4633"},
-      {persona: "Julieta M.", negocio: "Julieta Estética Integral", filial: "", rubro: "❤️ Salud y Bienestar", descripcion: "Depilación, manicura y tratamientos faciales.", descuento: "20% primer turno", zona: "San Martín", contacto: "541155556666", instagram: "", facebook: ""},
-      {persona: "Diego F.", negocio: "AutoRojo Gomería", filial: "", rubro: "🚗 Automotor", descripcion: "Gomas, alineación y balanceo. Service rápido.", descuento: "10% en cubiertas", zona: "CABA - Parque Patricios", contacto: "541166667777", instagram: "", facebook: "autorojogomeria", lat: "-34.6389", lng: "-58.3969"},
-      {persona: "Ceci A.", negocio: "Academia Ceci Inglés", filial: "", rubro: "🎓 Educación", descripcion: "Clases de inglés online, todos los niveles.", descuento: "2x1 primer mes", zona: "Online", contacto: "541177778888", instagram: "ceciinglesok", facebook: ""},
-    ];
-
     let ALL_ITEMS = [];
     let activeRubro = "Todos";
     let searchTerm = "";
@@ -1790,8 +1781,8 @@
       return `https://${baseDomain}/${clean}`;
     }
 
-    function instagramLink(value) {return toUrl(value, "instagram.com");}
-    function facebookLink(value) {return toUrl(value, "facebook.com");}
+    function instagramLink(value) { return toUrl(value, "instagram.com"); }
+    function facebookLink(value) { return toUrl(value, "facebook.com"); }
 
     function slugify(str) {
       return (str || "socio").toString().toLowerCase()
@@ -1820,7 +1811,39 @@
       countLine.textContent = `${filtered.length} comercio${filtered.length === 1 ? "" : "s"} de socios encontrados`;
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty" style="grid-column:1/-1;">No hay comercios que coincidan con la búsqueda.</div>`;
+
+        if (ALL_ITEMS.length === 0) {
+
+          countLine.textContent = "Todavía no hay comercios adheridos";
+
+          grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1; text-align:center; padding:50px 20px;">
+        <h2>¡Próximamente!</h2>
+
+        <p style="margin:15px 0;">
+          Todavía no hay comercios adheridos a la red de beneficios.
+        </p>
+
+        <p style="margin-bottom:25px;">
+          ¿Tenés un emprendimiento o comercio?<br>
+          ¡Sé el primero en sumarte!
+        </p>
+
+        <a class="btn" href="${CONFIG.formUrl}">
+          Adherir mi comercio
+        </a>
+      </div>
+    `;
+
+          return;
+        }
+
+        grid.innerHTML = `
+    <div class="empty" style="grid-column:1/-1;">
+      No hay comercios que coincidan con la búsqueda.
+    </div>
+  `;
+
         return;
       }
 
@@ -1921,8 +1944,8 @@
       const fbUrl = facebookLink(CONFIG.penaFacebook);
       [[wa, waUrl], [ig, igUrl], [fb, fbUrl]].forEach(([el, url]) => {
         if (!el) return;
-        if (url) {el.href = url;}
-        else {el.style.display = "none";}
+        if (url) { el.href = url; }
+        else { el.style.display = "none"; }
       });
     }
     setupPenaSocial();
@@ -1941,7 +1964,7 @@
     document.getElementById("heroSearchForm").addEventListener("submit", (e) => {
       e.preventDefault();
       setSearch(document.getElementById("heroSearch").value);
-      document.getElementById("directorio").scrollIntoView({behavior: "smooth"});
+      document.getElementById("directorio").scrollIntoView({ behavior: "smooth" });
     });
 
     /* ---------- Ficha de detalle (URL propia por comercio) ----------
@@ -1960,7 +1983,7 @@
 
     function openDetail(item) {
       const slug = slugify(item.negocio);
-      history.pushState({slug}, "", `?comercio=${slug}`);
+      history.pushState({ slug }, "", `?comercio=${slug}`);
       showDetail(item);
     }
 
@@ -2013,7 +2036,7 @@
       el.hidden = false;
       document.body.style.overflow = "hidden";
       el.querySelector(".detail-close").addEventListener("click", closeDetail);
-      window.scrollTo({top: 0});
+      window.scrollTo({ top: 0 });
     }
 
     function openDetailFromUrl() {
@@ -2026,7 +2049,7 @@
     window.addEventListener("popstate", () => {
       const slug = new URLSearchParams(window.location.search).get("comercio");
       const item = slug ? ALL_ITEMS.find(it => slugify(it.negocio) === slug) : null;
-      if (item) {showDetail(item);}
+      if (item) { showDetail(item); }
       else {
         document.getElementById("detailView").hidden = true;
         document.body.style.overflow = "";
@@ -2040,7 +2063,7 @@
       if (!mapEl || typeof L === "undefined") return;
 
       const points = ALL_ITEMS
-        .map(it => ({it, lat: parseFloat(it.lat), lng: parseFloat(it.lng)}))
+        .map(it => ({ it, lat: parseFloat(it.lat), lng: parseFloat(it.lng) }))
         .filter(p => Number.isFinite(p.lat) && Number.isFinite(p.lng));
 
       if (points.length === 0) {
@@ -2056,12 +2079,12 @@
       }).addTo(map);
 
       const bounds = [];
-      points.forEach(({it, lat, lng}) => {
+      points.forEach(({ it, lat, lng }) => {
         bounds.push([lat, lng]);
         L.marker([lat, lng]).addTo(map)
           .bindPopup(`<strong>${escapeHtml(it.negocio)}</strong><br>${escapeHtml(it.descuento || "")}`);
       });
-      if (bounds.length > 1) map.fitBounds(bounds, {padding: [30, 30]});
+      if (bounds.length > 1) map.fitBounds(bounds, { padding: [30, 30] });
     }
 
     /* ---------- QR para flyers (servicio externo gratuito, sin key) ---------- */
@@ -2091,7 +2114,7 @@
       try {
         const res = await fetch("/.netlify/functions/submit-comercio", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
         const out = await res.json().catch(() => ({}));
@@ -2127,11 +2150,11 @@
           .map(r => normalizeRow(r.fields))
           .filter(it => it.negocio);
 
-        init(items.length ? items : DEMO_DATA);
+        init(items);
       })
       .catch(err => {
-        console.error("Error cargando comercios:", err);
-        init(DEMO_DATA);
+        console.error(err);
+        init([]);
       });
   </script>
 </body>
