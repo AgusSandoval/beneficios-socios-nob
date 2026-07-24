@@ -2164,7 +2164,8 @@
       } catch (err) {
         msg.hidden = false;
         msg.className = "form-msg error";
-        msg.textContent = "No pudimos enviarlo (¿todavía no desplegaste la función en Netlify?). Probá con el formulario clásico de más abajo o escribinos por WhatsApp.";
+        msg.textContent = err.message;
+        console.error(err);
       } finally {
         btn.disabled = false;
         btn.textContent = "Enviar mi beneficio";

@@ -122,6 +122,8 @@ exports.handler = async (event) => {
   };
 
   try {
+    console.log("FIELDS:", JSON.stringify(fields, null, 2));
+
     const res = await fetch(
       `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`,
       {
@@ -136,6 +138,9 @@ exports.handler = async (event) => {
 
     const out = await res.json();
 
+    console.log("STATUS:", res.status);
+    console.log("AIRTABLE:", JSON.stringify(out));
+
     if (!res.ok) {
       const msg = (out && out.error && out.error.message) || "Airtable rechazó la solicitud.";
       return {
@@ -148,13 +153,33 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: cors,
-      body: JSON.stringify({ ok: true, id: out.records && out.records[0] && out.records[0].id }),
+      body: JSON.stringify({
+        ok: true,
+        id: out.records && out.records[0] && out.records[0].id,
+      }),
     };
   } catch (err) {
+    console.error("ERROR:", err);
     return {
       statusCode: 500,
       headers: cors,
-      body: JSON.stringify({ ok: false, error: "Error interno al conectar con Airtable." }),
+      body: JSON.stringify({
+        ok: false,
+        error: "Error interno al conectar con Airtable.",
+      }),
     };
   }
+
+  return {
+    statusCode: 200,
+    headers: cors,
+    body: JSON.stringify({ ok: true, id: out.records && out.records[0] && out.records[0].id }),
+  };
+} catch (err) {
+  return {
+    statusCode: 500,
+    headers: cors,
+    body: JSON.stringify({ ok: false, error: "Error interno al conectar con Airtable." }),
+  };
+}
 };
