@@ -1,3 +1,7 @@
+/* ===========================
+   CARDS
+=========================== */
+
 function render() {
 
     const term = APP.filtros.busqueda.toLowerCase();
@@ -250,9 +254,11 @@ function setSearch(value) {
 
 }
 
-function init(items) {
+/* ===========================
+   INIT
+=========================== */
 
-    APP.items = items;
+function init() {
 
     buildChips();
 
