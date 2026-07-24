@@ -1584,12 +1584,12 @@
 
       <form id="formAdherite" class="form-adherite" novalidate>
         <div class="form-row">
-          <label for="fPersona">Nombre y apellido *</label>
-          <input id="fPersona" name="persona" required autocomplete="name">
+          <label for="fPersonaContacto">Nombre y apellido *</label>
+          <input id="fPersonaContacto" name="personaContacto" required autocomplete="name">
         </div>
         <div class="form-row">
-          <label for="fNegocio">Nombre del comercio o servicio *</label>
-          <input id="fNegocio" name="negocio" required>
+          <label for="fNombreComercio">Nombre del comercio o servicio *</label>
+          <input id="fNombreComercio" name="nombreComercio" required>
         </div>
         <div class="form-row two-col">
           <div>
@@ -1618,18 +1618,18 @@
         </div>
         <div class="form-row two-col">
           <div>
-            <label for="fDescuento">Descuento para socios</label>
-            <input id="fDescuento" name="descuento" placeholder="Ej: 15% OFF">
+            <label for="fBeneficio">Descuento para socios</label>
+            <input id="fBeneficio" name="beneficio" placeholder="Ej: 15% OFF">
           </div>
           <div>
-            <label for="fZona">Zona / Barrio</label>
-            <input id="fZona" name="zona" placeholder="Ej: CABA - Caballito">
+            <label for="fCiudad">Zona / Barrio</label>
+            <input id="fCiudad" name="ciudad" placeholder="Ej: CABA - Caballito">
           </div>
         </div>
         <div class="form-row two-col">
           <div>
-            <label for="fContacto">WhatsApp</label>
-            <input id="fContacto" name="contacto" placeholder="Ej: 5491122223333">
+            <label for="fWhatsapp">WhatsApp</label>
+            <input id="fWhatsapp" name="whatsapp" placeholder="Ej: 5491122223333">
           </div>
           <div>
             <label for="fInstagram">Instagram</label>
@@ -1721,7 +1721,7 @@
        ============================================================ */
     const CONFIG = {
       airtableBaseId: "app4jSY7c4UJ14ILU",
-      airtableTableName: "Negocios",
+      airtableTableName: "Comercios",
       airtableToken: "",
       formUrl: "https://airtable.com/app4jSY7c4UJ14ILU/pagXsizU6VPWnzqy3/form",
       estadoAprobadoValor: "Aprobado",
@@ -1805,7 +1805,7 @@
 
       const filtered = ALL_ITEMS.filter(it => {
         const matchesRubro = activeRubro === "Todos" || it.rubro === activeRubro;
-        const haystack = `${it.negocio || ""} ${it.persona || ""} ${it.descripcion || ""} ${it.rubro || ""} ${it.filial || ""} ${it.zona || ""}`.toLowerCase();
+        const haystack = `${it.nombreComercio || ""} ${it.personaContacto || ""} ${it.descripcion || ""} ${it.rubro || ""} ${it.filial || ""} ${it.ciudad || ""}`.toLowerCase();
         const matchesSearch = !term || haystack.includes(term);
         return matchesRubro && matchesSearch;
       });
@@ -1850,30 +1850,30 @@
       }
 
       grid.innerHTML = filtered.map(it => {
-        const wa = waLink(it.contacto);
+        const wa = waLink(it.whatsapp);
         const ig = instagramLink(it.instagram);
         const fb = facebookLink(it.facebook);
-        const slug = slugify(it.negocio);
-        const initials = (it.negocio || "?").trim().slice(0, 2).toUpperCase();
+        const slug = slugify(it.nombreComercio);
+        const initials = (it.nombreComercio || "?").trim().slice(0, 2).toUpperCase();
         const idBlock = it.logo
           ? `<img class="logo-img" src="${it.logo}" alt="" loading="lazy">`
           : `<div class="monogram" aria-hidden="true">${escapeHtml(initials)}</div>`;
         return `
       <div class="card">
-        ${it.descuento ? `<div class="discount-badge">${escapeHtml(it.descuento)}</div>` : ""}
+        ${it.beneficio ? `<div class="discount-badge">${escapeHtml(it.beneficio)}</div>` : ""}
         <div class="top-row">
           <div class="id-row">
             ${idBlock}
             <div>
               <div class="rubro">${escapeHtml(it.rubro || "General")}</div>
-              <h3>${escapeHtml(it.negocio || "Socio de la red")}</h3>
-              <div class="persona">${escapeHtml(it.persona || "")}</div>
+              <h3>${escapeHtml(it.nombreComercio || "Socio de la red")}</h3>
+              <div class="persona">${escapeHtml(it.personaContacto || "")}</div>
             </div>
           </div>
         </div>
         ${it.descripcion ? `<p class="desc">${escapeHtml(it.descripcion)}</p>` : ""}
         <div class="meta">
-          ${it.zona ? `<span class="zona">${escapeHtml(it.zona)}</span>` : ""}
+          ${it.ciudad ? `<span class="zona">${escapeHtml(it.ciudad)}</span>` : ""}
           ${it.filial ? `<span class="filial">${escapeHtml(it.filial)}</span>` : ""}
         </div>
         <div class="actions">
@@ -1906,7 +1906,7 @@
     function updateStats() {
       const comercios = ALL_ITEMS.length;
       const rubros = new Set(ALL_ITEMS.map(it => it.rubro).filter(Boolean)).size;
-      const localidades = new Set(ALL_ITEMS.map(it => it.zona).filter(Boolean)).size;
+      const localidades = new Set(ALL_ITEMS.map(it => it.ciudad).filter(Boolean)).size;
 
       const setText = (id, value) => {
         const el = document.getElementById(id);
@@ -1979,7 +1979,7 @@
     document.getElementById("grid").addEventListener("click", (e) => {
       const btn = e.target.closest(".btn-detail");
       if (!btn) return;
-      const item = ALL_ITEMS.find(it => slugify(it.negocio) === btn.dataset.slug);
+      const item = ALL_ITEMS.find(it => slugify(it.nombreComercio) === btn.dataset.slug);
       if (item) openDetail(item);
     });
 
@@ -2044,13 +2044,13 @@
     function openDetailFromUrl() {
       const slug = new URLSearchParams(window.location.search).get("comercio");
       if (!slug) return;
-      const item = ALL_ITEMS.find(it => slugify(it.negocio) === slug);
+      const item = ALL_ITEMS.find(it => slugify(it.nombreComercio) === slug);
       if (item) showDetail(item);
     }
 
     window.addEventListener("popstate", () => {
       const slug = new URLSearchParams(window.location.search).get("comercio");
-      const item = slug ? ALL_ITEMS.find(it => slugify(it.negocio) === slug) : null;
+      const item = slug ? ALL_ITEMS.find(it => slugify(it.nombreComercio) === slug) : null;
       if (item) { showDetail(item); }
       else {
         document.getElementById("detailView").hidden = true;
@@ -2084,7 +2084,7 @@
       points.forEach(({ it, lat, lng }) => {
         bounds.push([lat, lng]);
         L.marker([lat, lng]).addTo(map)
-          .bindPopup(`<strong>${escapeHtml(it.negocio)}</strong><br>${escapeHtml(it.descuento || "")}`);
+          .bindPopup(`<strong>${escapeHtml(it.nombreComercio)}</strong><br>${escapeHtml(it.beneficio || "")}`);
       });
       if (bounds.length > 1) map.fitBounds(bounds, { padding: [30, 30] });
     }
@@ -2150,7 +2150,7 @@
       .then(records => {
         const items = records
           .map(r => normalizeRow(r.fields))
-          .filter(it => it.negocio);
+          .filter(it => it.nombreComercio);
 
         init(items);
       })
