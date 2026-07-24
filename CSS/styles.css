@@ -917,6 +917,17 @@ section {
     max-width: 360px;
 }
 
+.map-empty p {
+    margin: 0;
+    color: var(--piedra);
+    font-size: 13.5px;
+    max-width: 360px;
+}
+
+.map-empty[hidden] {
+    display: none !important;
+}
+
 /* ---------- TESTIMONIALS ---------- */
 .testi-grid {
     display: grid;
