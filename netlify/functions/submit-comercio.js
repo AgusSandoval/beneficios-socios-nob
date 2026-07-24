@@ -79,7 +79,6 @@ exports.handler = async (event) => {
   const email = clean(data.email);
 
   const errores = [];
-  const errores = [];
 
   if (!personaContacto) errores.push("Persona de contacto");
   if (!nombreComercio) errores.push("Nombre del comercio");

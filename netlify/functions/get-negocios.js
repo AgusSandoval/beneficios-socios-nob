@@ -50,6 +50,23 @@ exports.handler = async (event) => {
                 url += `&offset=${offset}`;
             }
 
+            console.log("BASE_ID:", BASE_ID);
+            console.log("TABLE_NAME:", TABLE_NAME);
+            console.log("URL:", url);
+
+            const res = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+                },
+            });
+
+            console.log("STATUS:", res.status);
+
+            const data = await res.json();
+
+            console.log("AIRTABLE RESPONSE:");
+            console.log(JSON.stringify(data, null, 2));
+
             const res = await fetch(url, {
                 headers: {
                     Authorization: `Bearer ${AIRTABLE_TOKEN}`,
