@@ -1349,3 +1349,13 @@ footer .foot-links {
         padding-bottom: 54px;
     }
 }
+
+.nav-cta-socio {
+    background: var(--rojo);
+    color: #fff;
+}
+
+.nav-cta-socio:hover {
+    background: var(--rojo-oscuro);
+    color: #fff;
+}
