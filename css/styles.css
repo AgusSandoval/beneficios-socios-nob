@@ -710,17 +710,18 @@ section {
 }
 
 .card .logo-img {
-    width: 46px;
-    height: 46px;
-    object-fit: cover;
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
     border-radius: 50%;
     border: 1px solid var(--linea);
     flex: 0 0 auto;
+    background: #fff;
 }
 
 .card .monogram {
-    width: 46px;
-    height: 46px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     flex: 0 0 auto;
     background: var(--negro);
@@ -730,7 +731,7 @@ section {
     justify-content: center;
     font-family: var(--font-mono);
     font-weight: 700;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .card .rubro {
@@ -1106,9 +1107,12 @@ footer .foot-links {
 }
 
 .detail-logo {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     font-size: 20px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #fff;
 }
 
 .detail-head h2 {
@@ -1353,9 +1357,30 @@ footer .foot-links {
 .nav-cta-socio {
     background: var(--rojo);
     color: #fff;
+    font-weight: 800;
+    padding: 11px 20px;
+    border: 2px solid var(--rojo);
+    box-shadow: 0 0 0 0 rgba(195, 31, 46, 0.5);
+    animation: socioPulse 2.5s infinite;
 }
 
 .nav-cta-socio:hover {
-    background: var(--rojo-oscuro);
+    background: #a6182a;
+    border-color: #a6182a;
     color: #fff;
+    transform: translateY(-1px);
+}
+
+@keyframes socioPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(195, 31, 46, 0.45);
+    }
+
+    70% {
+        box-shadow: 0 0 0 7px rgba(195, 31, 46, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(195, 31, 46, 0);
+    }
 }
