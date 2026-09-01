@@ -1142,17 +1142,17 @@ footer .foot-links {
     gap: 2px;
     background: var(--rojo);
     color: #fff;
-    padding: 14px 22px;
+    padding: 10px 16px;
     margin-bottom: 20px;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: 26px;
+    font-size: 22px;
     text-transform: uppercase;
 }
 
 .detail-descuento span {
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: rgba(255, 255, 255, 0.85);
