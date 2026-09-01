@@ -246,10 +246,6 @@ img {
     margin: 0 auto 22px;
 }
 
-.hero h1 span {
-    color: var(--rojo);
-}
-
 .hero .lede {
     max-width: 620px;
     margin: 0 auto 34px;
@@ -1385,10 +1381,10 @@ footer .foot-links {
     }
 }
 
-.hero-text-white {
-    color: #fff;
+.hero h1 .hero-title-white {
+    color: #ffffff !important;
 }
 
-.hero-text-red {
-    color: #d71920;
+.hero h1 .hero-title-red {
+    color: #d71920 !important;
 }
